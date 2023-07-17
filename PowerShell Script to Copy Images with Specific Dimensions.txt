@@ -1,0 +1,30 @@
+# Set the source and destination directories
+$sourceDirectory = "C:\Users\parveen.kumar\Downloads\folder1"
+$destinationDirectory = "C:\Users\parveen.kumar\Downloads\folder2"
+
+# Specify the desired image dimensions
+$desiredWidth = 225
+$desiredHeight = 267
+
+# Get all image files from the source directory
+$imageFiles = Get-ChildItem -Path $sourceDirectory -Filter "*.jpg" -File
+
+# Process each image file
+foreach ($imageFile in $imageFiles) {
+    # Load the image using System.Drawing.Bitmap
+    $image = New-Object System.Drawing.Bitmap($imageFile.FullName)
+
+    # Check the image dimensions
+    if ($image.Width -eq $desiredWidth -and $image.Height -eq $desiredHeight) {
+        # Create the destination path
+        $destinationPath = Join-Path -Path $destinationDirectory -ChildPath $imageFile.Name
+
+        # Copy the image to the destination directory
+        Copy-Item -Path $imageFile.FullName -Destination $destinationPath -Force
+
+        Write-Output "Copied: $($imageFile.Name)"
+    }
+
+    # Dispose of the image object
+    $image.Dispose()
+}
